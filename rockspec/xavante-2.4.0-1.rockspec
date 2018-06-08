@@ -1,6 +1,6 @@
 package = "Xavante"
 
-version = "2.3.0-1"
+version = "2.4.0-1"
 
 description = {
   summary = "Lua Web Server Library",
@@ -9,14 +9,14 @@ description = {
     This rock installs Xavante as a library that other applications can use.
   ]],
   license = "MIT/X11",
-  homepage = "http://www.keplerproject.org/xavante"
+  homepage = "http://keplerproject.github.io/xavante"
 }
 
 dependencies = { 'luasocket >= 2.1', 'copas >= 1.2.0', 'luafilesystem >= 1.6.0' }
 
 source = {
-  url = "https://github.com/keplerproject/xavante/archive/v2.3.0.tar.gz",
-  dir = "xavante-2.3.0",
+  url = "https://github.com/keplerproject/xavante/archive/v2.4.0.tar.gz",
+  dir = "xavante-2.4.0",
 }
 
 local XAVANTE_LUAS = { "src/xavante/cgiluahandler.lua", 
