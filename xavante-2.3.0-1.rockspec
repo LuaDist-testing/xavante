@@ -1,6 +1,8 @@
-package = "Xavante"
+-- This file was automatically generated for the LuaDist project.
 
-version = "2.2.0-1"
+package = "xavante"
+
+version = "2.3.0-1"
 
 description = {
   summary = "Lua Web Server Library",
@@ -12,11 +14,18 @@ description = {
   homepage = "http://www.keplerproject.org/xavante"
 }
 
-dependencies = { 'luasocket >= 2.0', 'copas >= 1.1.5', 'luafilesystem >= 1.5.0' }
+dependencies = { 'luasocket >= 2.1', 'copas >= 1.2.0', 'luafilesystem >= 1.6.0' }
 
+-- LuaDist source
 source = {
-  url = "http://github.com/downloads/keplerproject/xavante/xavante-2.2.0.tar.gz"
+  tag = "2.3.0-1",
+  url = "git://github.com/LuaDist-testing/xavante.git"
 }
+-- Original source
+-- source = {
+--   url = "https://github.com/keplerproject/xavante/archive/v2.3.0.tar.gz",
+--   dir = "xavante-2.3.0",
+-- }
 
 local XAVANTE_LUAS = { "src/xavante/cgiluahandler.lua", 
 	         "src/xavante/encoding.lua",
@@ -31,7 +40,7 @@ local XAVANTE_LUAS = { "src/xavante/cgiluahandler.lua",
 	         "src/xavante/ruleshandler.lua" }
 
 build = {
-   type = "module",
+   type = "builtin",
    modules = {
      sajax = "src/sajax/sajax.lua",
      xavante = "src/xavante/xavante.lua"

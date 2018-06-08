@@ -1,6 +1,6 @@
 package = "Xavante"
 
-version = "2.2.0-1"
+version = "2.2.1-1"
 
 description = {
   summary = "Lua Web Server Library",
@@ -15,7 +15,7 @@ description = {
 dependencies = { 'luasocket >= 2.0', 'copas >= 1.1.5', 'luafilesystem >= 1.5.0' }
 
 source = {
-  url = "http://github.com/downloads/keplerproject/xavante/xavante-2.2.0.tar.gz"
+  url = "http://github.com/downloads/keplerproject/xavante/xavante-2.2.1.tar.gz"
 }
 
 local XAVANTE_LUAS = { "src/xavante/cgiluahandler.lua", 

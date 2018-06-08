@@ -5,10 +5,9 @@
 -----------------------------------------------------------------------------
 require "lxp.lom"
 require "socket.url"
+local httpd = require "xavante.httpd"
 
 local url = socket.url
-
-module (arg and arg[1])
 
 -- returns a copy of the string without any
 -- leading or trailing whitespace
@@ -260,7 +259,7 @@ local function addPropstat (outtable, propstat)
 end
 
 local function dav_propfind (req, res, repos_b, props_b)
-	res.statusline = "HTTP/1.1 207 Multi-Status\r\n"
+	res.statusline = "HTTP/1.1 207 Multi-Status"
 	res.headers ["Content-Type"] = 'text/xml; charset="utf-8"'
 
 	local depth = req.headers.depth
@@ -347,7 +346,7 @@ local function dav_propfind (req, res, repos_b, props_b)
 end
 
 local function dav_proppatch (req, res, repos_b, props_b)
-	res.statusline = "HTTP/1.1 207 Multi-Status\r\n"
+	res.statusline = "HTTP/1.1 207 Multi-Status"
 	res.headers ["Content-Type"] = 'text/xml; charset="utf-8"'
 
 	local path = req.relpath
@@ -443,15 +442,15 @@ local function dav_mkcol (req, res, repos_b)
 	local path = req.relpath
 	local resource = repos_b:getResource (req.match, path)
 	if resource then
-		res.statusline = "HTTP/1.1 405 Method Not Allowed\r\n"
+		res.statusline = "HTTP/1.1 405 Method Not Allowed"
 		res.content = ""
 		return res
 	end
 	local done, err = repos_b:createCollection (req.match, path)
 	if done then
-		res.statusline = "HTTP/1.1 201 Created\r\n"
+		res.statusline = "HTTP/1.1 201 Created"
 	else
-		res.statusline = "HTTP/1.1 403 Forbidden\r\n"
+		res.statusline = "HTTP/1.1 403 Forbidden"
 	end
 	res.content = ""
 	return res
@@ -468,7 +467,7 @@ local function dav_delete (req, res, repos_b, props_b)
 	for r in resource:getItems ("Infinity") do
 		local ok, err = resource:delete ()
 		if not ok then
-			res.statusline = "HTTP/1.1 207 Multi-Status\r\n"
+			res.statusline = "HTTP/1.1 207 Multi-Status"
 			res.content = string.format ([[
 				<?xml version="1.0" encoding="utf-8" ?>
 				<d:multistatus xmlns:d="DAV:">
@@ -481,16 +480,16 @@ local function dav_delete (req, res, repos_b, props_b)
 		end
 		props_b:delete (resource:getPath ())		-- TODO
 	end
-	res.statusline = "HTTP/1.1 204 No Content\r\n"
---[[
+	--res.statusline = "HTTP/1.1 204 No Content"
+
 	local done, err = resource:delete ()
 	if done then
-		res.statusline = "HTTP/1.1 204 No Content\r\n"
+		res.statusline = "HTTP/1.1 204 No Content"
 		props_b:delete (path)
 	else
-		res.statusline = "HTTP/1.1 403 Forbidden\r\n"
+		res.statusline = "HTTP/1.1 403 Forbidden"
 	end
---]]
+
 	res.content = ""
 	return res
 end
@@ -512,14 +511,18 @@ local dav_cmd_dispatch = {
 	LOCK = dav_lock,
 }
 
-function makeHandler (repos_b, props_b)
+function xavante.davhandler (params)
 	return function (req, res)
 --		print (req.cmd_mth, req.parsed_url.path)
 --		for k,v in pairs (req.headers) do print (k,v) end
 
+		local savePath = req.parsed_url.path
+		req.parsed_url.path = '/'
+		req.match = socket.url.build(req.parsed_url)
+		req.parsed_url.path = savePath
 		local dav_handler = dav_cmd_dispatch [req.cmd_mth]
 		if dav_handler then
-			return dav_handler (req, res, repos_b, props_b)
+			return dav_handler (req, res, params.repos_b, params.props_b)
 		end
 	end
 end
